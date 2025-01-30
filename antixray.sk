@@ -1,0 +1,57 @@
+variables:
+    {broadcasted.%player%} = false
+
+on break of diamond ore or deepslate diamond ore:
+    add 1 to {diamondsMined.%player%}
+    # Check if broadcast is needed
+    if {broadcasted.%player%} is false:
+        if {diamondsMined.%player%} > 25: 
+            set {foundOp.%player%} to false
+            loop all players:
+                if loop-player has permission "op":
+                    set {foundOp.%player%} to true
+            if {foundOp.%player%} is true:
+                execute player command "/report %player% x-ray: §d%{diamondsMined.%player%}% §f diamonds, §d%{goldMined.%player%}% §f gold, §d%{ironMined.%player%}% §f iron,  §d%{stoneMined.%player%}% §f stone mined"
+                loop all players:
+                    if loop-player has permission "op":
+                        send "§d§l%player% §f has mined §d%{diamondsMined.%player%}% §f diamonds, §d%{goldMined.%player%}% §f gold, §d%{ironMined.%player%}% §f iron,  §d%{stoneMined.%player%}% §f stone in total in the last 300 seconds" to loop-player
+                    set {broadcasted.%player%} to true
+                    wait 300 seconds
+                    set {broadcasted.%player%} to false
+            else:
+                execute player command "/report %player% x-ray: §d%{diamondsMined.%player%}% §f diamonds, §d%{goldMined.%player%}% §f gold, §d%{ironMined.%player%}% §f iron,  §d%{stoneMined.%player%}% §f stone mined"
+                set {broadcasted.%player%} to true
+                wait 300 seconds
+                set {broadcasted.%player%} to false
+    # Start a delayed task to subtract 1 after 300 seconds
+    set {_player} to player
+    set {_currentCount} to {diamondsMined.%{_player}%}
+    if {foundOp.%player%} is false:
+        wait 300 seconds
+    subtract 1 from {diamondsMined.%{_player}%}
+
+    
+on break of stone or deepslate:
+    add 1 to {stoneMined.%player%}
+    wait 300 seconds
+    subtract 1 from {stoneMined.%player%}
+
+on break of iron ore or deepslate iron ore:
+    add 1 to {ironMined.%player%}
+    wait 300 seconds
+    subtract 1 from {ironMined.%player%}
+
+on break of gold ore or deepslate gold ore:
+    add 1 to {goldMined.%player%}
+    wait 300 seconds
+    subtract 1 from {goldMined.%player%}
+
+command /restartx:
+    permission: op
+    trigger:
+        loop all players:
+            set {broadcasted.%loop-player%} to false
+            set {diamondsMined.%loop-player%} to 0
+            set {goldMined.%loop-player%} to 0
+            set {ironMined.%loop-player%} to 0
+            set {stoneMined.%loop-player%} to 0

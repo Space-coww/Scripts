@@ -1,0 +1,45 @@
+command /report <player> [<text>]:
+    cooldown: 3 minutes
+    cooldown message: Please wait %remaining time% to use this command again, it's only been %elapsed time%.
+    trigger:
+        if arg-1 is online:
+            set {_reason} to arg-2
+            if {_reason} is not set:
+                set {_reason} to "No reason provided"
+            loop all players:
+                if loop-player has permission "op":
+                    send "§l%arg-1% has been reported by %player% for reason: %{_reason}%" to loop-player
+            add "%arg-1%|%{_reason}%" to {reportedlist::*}
+            send "§lYou have successfully reported %arg-1%! Reason: %{_reason}%" to player
+        else:
+            send "The specified player is not online!" to player
+
+command /lastreportedwarp:
+    permission: skript.commands.lastreportedwarp
+    trigger:
+        if size of {reportedlist::*} > 0:
+            set {_lastReportedEntry} to last element of {reportedlist::*}
+            set {_split::*} to {_lastReportedEntry} split at "|"
+            set {_lastReportedPlayerName} to {_split::1}
+            set {_lastReportedPlayer} to ""
+            loop all players:
+                if name of loop-player is {_lastReportedPlayerName}:
+                    set {_lastReportedPlayer} to loop-player
+                    stop loop
+            if {_lastReportedPlayer} is set:
+                teleport player to {_lastReportedPlayer}'s location
+                send "You have been teleported to the last reported player: %{_lastReportedPlayerName}%." to player
+            else:
+                send "The last reported player (%{_lastReportedPlayerName}%) is not online!" to player
+        else:
+            send "No players have been reported yet!" to player
+
+command /reportedlist:
+    permission: skript.commands.reportedlist
+    trigger:
+        if size of {reportedlist::*} > 0:
+            send "Reported players:" to player
+            loop {reportedlist::*}:
+                send "- %loop-value%" to player
+        else:
+            send "The reported list is currently empty!" to player

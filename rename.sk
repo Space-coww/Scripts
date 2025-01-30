@@ -1,0 +1,35 @@
+command /rename <text> [<color>] [<text>]:
+    cooldown: 2 minutes
+    cooldown message: "Please wait %remaining time% to rename again!"
+    cooldown bypass: skript.rename.bypass
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                if player's tool is not air:
+                    if arg-3 is set:
+                        set {_text} to arg-3 in lower
+                        if {_text} is "bold" or "b":
+                            set name of held item to "§l%arg-1%" with color arg-2
+                        else if {_text} is "italic" or "i":
+                            set name of held item to "§o%arg-1%" with color arg-2
+                        else if {_text} is "normal" or "n":
+                            set name of held item to "§r%arg-1%" with color arg-2
+                        else if {_text} is "magic" or "m":
+                            set name of held item to "§k%arg-1%" with color arg-2
+                        else if {_text} is "strikethrough" or "strike" or "s":
+                            set name of held item to "§o%arg-1%" with color arg-2
+                        else if {_text} is "underlined" or "under" or "u":
+                            set name of held item to "§n%arg-1%" with color arg-2
+                        else:
+                            send "Styles: bold/b, italic/i, normal/n, magic/m, strikethrough/strike/s, underlined/under/u" to player
+                    else:
+                        set name of held item to arg-1 with color arg-2
+                else:
+                    send "Please hold an item!" to player
+            else:
+                if player's tool is not air:
+                    set name of held item to arg-1
+                else:
+                    send "Please hold an item!" to player
+        else:
+            send "Correct usage: /rename text(mandatory) color(nrq) style(nrq)" to player
