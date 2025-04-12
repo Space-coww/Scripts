@@ -26,8 +26,11 @@ on break of diamond ore or deepslate diamond ore:
     # Start a delayed task to subtract 1 after 300 seconds
     set {_player} to player
     set {_currentCount} to {diamondsMined.%{_player}%}
-    if {foundOp.%player%} is false:
+    if {broadcasted.%player%} is false:
         wait 300 seconds
+    else:
+        if {diamondsMined.%player%} > 25:
+            wait 300 seconds
     subtract 1 from {diamondsMined.%{_player}%}
 
     
