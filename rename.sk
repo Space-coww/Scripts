@@ -32,4 +32,4 @@ command /rename <text> [<color>] [<text>]:
                 else:
                     send "Please hold an item!" to player
         else:
-            send "Correct usage: /rename text(mandatory) color(nrq) style(nrq)" to player
+            send "Correct usage: /rename text(required) color(optional) style(optional)" to player
